@@ -17,7 +17,7 @@
 A general implementation of adaln-modulated VIT-like~(DiT) transformer for video processing.
 """
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import torch
 from einops import rearrange
@@ -449,7 +449,7 @@ class GeneralDIT(nn.Module):
         latent_condition_sigma: Optional[torch.Tensor] = None,
         condition_video_augment_sigma: Optional[torch.Tensor] = None,
         **kwargs,
-    ) -> torch.Tensor | List[torch.Tensor] | Tuple[torch.Tensor, List[torch.Tensor]]:
+    ) -> Union[torch.Tensor, List[torch.Tensor], Tuple[torch.Tensor, List[torch.Tensor]]]:
         """
         Args:
             x: (B, C, T, H, W) tensor of spatial-temp inputs

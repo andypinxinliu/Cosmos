@@ -28,3 +28,8 @@ pillow
 sentencepiece
 termcolor
 transformers==4.45.0
+loguru
+attrs
+pynvml
+opencv-python
+einops

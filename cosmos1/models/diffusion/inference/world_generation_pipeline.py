@@ -15,7 +15,7 @@
 
 import gc
 import os
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import numpy as np
 import torch
@@ -293,7 +293,7 @@ class DiffusionText2WorldGenerationPipeline(BaseWorldGenerationPipeline):
         prompt: str,
         negative_prompt: Optional[str] = None,
         word_limit_to_skip_upsampler: Optional[int] = None,
-    ) -> tuple[np.ndarray, str] | None:
+    ) -> Union[tuple[np.ndarray, str],  None]:
         """Generate video from text prompt with optional negative prompt guidance.
 
         Pipeline steps:
@@ -476,7 +476,7 @@ class DiffusionVideo2WorldGenerationPipeline(DiffusionText2WorldGenerationPipeli
         self,
         embedding: torch.Tensor,
         condition_latent: torch.Tensor,
-        negative_prompt_embedding: torch.Tensor | None = None,
+        negative_prompt_embedding: Union[torch.Tensor, None] = None,
     ) -> torch.Tensor:
         """Generate video frames using the diffusion model.
 
@@ -581,7 +581,7 @@ class DiffusionVideo2WorldGenerationPipeline(DiffusionText2WorldGenerationPipeli
         prompt: str,
         image_or_video_path: str,
         negative_prompt: Optional[str] = None,
-    ) -> tuple[np.ndarray, str] | None:
+    ) -> Union[tuple[np.ndarray, str], None]:
         """Generate video from text prompt and optional image.
 
         Pipeline steps:

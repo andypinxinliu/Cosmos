@@ -22,7 +22,7 @@ import json
 import random
 import time
 from contextlib import ContextDecorator
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, TypeVar, Union
 
 import numpy as np
 import termcolor
@@ -33,8 +33,8 @@ from cosmos1.utils import distributed, log
 
 def to(
     data: Any,
-    device: str | torch.device | None = None,
-    dtype: torch.dtype | None = None,
+    device: Union[str, torch.device, None] = None,
+    dtype: Union[torch.dtype, None] = None,
     memory_format: torch.memory_format = torch.preserve_format,
 ) -> Any:
     """Recursively cast data into the specified device, dtype, and/or memory_format.
@@ -110,7 +110,7 @@ def set_random_seed(seed: int, by_rank: bool = False) -> None:
 
 
 def arch_invariant_rand(
-    shape: List[int] | Tuple[int], dtype: torch.dtype, device: str | torch.device, seed: int | None = None
+    shape: Union[List[int], Tuple[int]], dtype: torch.dtype, device: Union[str, torch.device], seed: Union[int, None] = None
 ):
     """Produce a GPU-architecture-invariant randomized Torch tensor.
 

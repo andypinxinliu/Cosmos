@@ -15,7 +15,7 @@
 
 import gc
 import os
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import torch
@@ -393,7 +393,7 @@ class ARBaseGenerationPipeline(BaseWorldGenerationPipeline):
         sampling_config: SamplingConfig,
         num_input_frames: int = 9,
         seed: int = 0,
-    ) -> np.ndarray | None:
+    ) -> Union[np.ndarray, None]:
         """Generate a video continuation from input frames.
 
         Pipeline steps:
@@ -408,7 +408,7 @@ class ARBaseGenerationPipeline(BaseWorldGenerationPipeline):
             seed: Random seed for reproducibility (default: 0)
 
         Returns:
-            np.ndarray | None: Generated video as numpy array (time, height, width, channels)
+            Union[np.ndarray, None]: Generated video as numpy array (time, height, width, channels)
                 if generation successful, None if safety checks fail
         """
         log.info("Run generation")
@@ -849,7 +849,7 @@ class ARVideo2WorldGenerationPipeline(ARBaseGenerationPipeline):
         num_input_frames: int = 9,
         seed: int = 0,
         sampling_config: SamplingConfig = None,
-    ) -> np.ndarray | None:
+    ) -> Union[np.ndarray, None]:
         """Generate a video guided by text prompt and input frames.
 
         Pipeline steps:
@@ -868,7 +868,7 @@ class ARVideo2WorldGenerationPipeline(ARBaseGenerationPipeline):
                 uses default config if None
 
         Returns:
-            np.ndarray | None: Generated video as numpy array (time, height, width, channels)
+            Union[np.ndarray, None]: Generated video as numpy array (time, height, width, channels)
                 if generation successful, None if safety checks fail
         """
         if self.enable_text_guardrail:

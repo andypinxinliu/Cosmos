@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from dataclasses import dataclass
-from typing import Callable, Dict, Optional, Tuple
+from typing import Callable, Dict, Optional, Tuple, Union
 
 import torch
 from torch import Tensor
@@ -166,8 +166,8 @@ class LatentDiffusionDecoderModel(VideoDiffusionModel):
         data_batch: Dict,
         guidance: float = 1.5,
         seed: int = 1,
-        state_shape: Tuple | None = None,
-        n_sample: int | None = None,
+        state_shape: Union[Tuple, None] = None,
+        n_sample: Union[int, None] = None,
         is_negative_prompt: bool = False,
         num_steps: int = 35,
         solver_option: COMMON_SOLVER_OPTIONS = "2ab",

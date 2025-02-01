@@ -16,7 +16,7 @@
 import gc
 import os
 from abc import ABC
-from typing import Any
+from typing import Any, Union
 
 import numpy as np
 import torch
@@ -28,9 +28,9 @@ from cosmos1.models.guardrail.common import presets as guardrail_presets
 class BaseWorldGenerationPipeline(ABC):
     def __init__(
         self,
-        inference_type: str | None = None,
-        checkpoint_dir: str | None = None,
-        checkpoint_name: str | None = None,
+        inference_type: Union[str, None] = None,
+        checkpoint_dir: Union[str, None] = None,
+        checkpoint_name: Union[str, None] = None,
         enable_text_guardrail: bool = False,
         enable_video_guardrail: bool = False,
         offload_network: bool = False,
@@ -249,7 +249,7 @@ class BaseWorldGenerationPipeline(ABC):
 
         return is_safe
 
-    def _run_guardrail_on_video(self, video: np.ndarray) -> np.ndarray | None:
+    def _run_guardrail_on_video(self, video: np.ndarray) -> Union[np.ndarray, None]:
         """Check if video meets safety requirements.
 
         Validates generated video content against safety policies using guardrail models.
@@ -262,7 +262,7 @@ class BaseWorldGenerationPipeline(ABC):
         """
         return guardrail_presets.run_video_guardrail(video, self.video_guardrail)
 
-    def _run_guardrail_on_video_with_offload(self, video: np.ndarray) -> np.ndarray | None:
+    def _run_guardrail_on_video_with_offload(self, video: np.ndarray) -> Union[np.ndarray, None]:
         """Check if generated video meets safety requirements.
 
         Args:

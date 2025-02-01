@@ -17,7 +17,7 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Union
 
 import torch
 from safetensors.torch import load_file
@@ -316,7 +316,7 @@ class AutoRegressiveModel(torch.nn.Module):
     @torch.no_grad()
     def generate(
         self,
-        prompt_tokens: List[List[int]] | torch.Tensor,
+        prompt_tokens: Union[List[List[int]], torch.Tensor],
         max_gen_len: int,
         temperature: float = 1.0,
         top_k: Optional[int] = None,
@@ -337,7 +337,7 @@ class AutoRegressiveModel(torch.nn.Module):
         Autoregressive generation built upon the gpt-fast implementation (https://github.com/pytorch-labs/gpt-fast).
 
         Args:
-            prompt_tokens (List[List[int]] | torch.Tensor): A single prompt of shape (1, seq_len).
+            prompt_tokens (Union[List[List[int]], torch.Tensor]): A single prompt of shape (1, seq_len).
             max_gen_len (int): Maximum length of the generated text sequence.
             temperature (float, optional): Temperature value for controlling randomness in sampling. Defaults to 0.6.
             top_k (int, optional): Top-k value for top-k sampling. Defaults to None.

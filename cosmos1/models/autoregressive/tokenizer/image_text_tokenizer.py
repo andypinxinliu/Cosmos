@@ -212,7 +212,7 @@ class ImageTextTokenizer(TextTokenizer):
 
     def apply_chat_template(
         self,
-        conversation: List[Dict[str, Any]] | List[List[Dict[str, Any]]],
+        conversation: Union[List[Dict[str, Any]], List[List[Dict[str, Any]]]],
         *,
         images: Optional[ImageInput] = None,
         image_kwargs: Optional[Dict[str, Any]] = None,

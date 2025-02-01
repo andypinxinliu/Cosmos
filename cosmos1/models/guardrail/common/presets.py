@@ -17,6 +17,7 @@ import os
 
 import numpy as np
 
+from typing import Union
 from cosmos1.models.guardrail.aegis.aegis import Aegis
 from cosmos1.models.guardrail.blocklist.blocklist import Blocklist
 from cosmos1.models.guardrail.common.core import GuardrailRunner
@@ -58,7 +59,7 @@ def run_text_guardrail(prompt: str, guardrail_runner: GuardrailRunner) -> bool:
     return is_safe
 
 
-def run_video_guardrail(frames: np.ndarray, guardrail_runner: GuardrailRunner) -> np.ndarray | None:
+def run_video_guardrail(frames: np.ndarray, guardrail_runner: GuardrailRunner) -> Union[np.ndarray, None]:
     """Run the video guardrail on the frames, checking for content safety and applying face blur.
 
     Args:

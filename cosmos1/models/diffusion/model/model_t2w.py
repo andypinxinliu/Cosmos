@@ -1,3 +1,4 @@
+from __future__ import annotations
 # SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable, Dict, Optional, Tuple
+from typing import Callable, Dict, Optional, Tuple, Union
+
 
 import torch
 from torch import Tensor
@@ -230,13 +232,13 @@ class DiffusionT2WModel(torch.nn.Module):
         data_batch: Dict,
         guidance: float = 1.5,
         seed: int = 1,
-        state_shape: Tuple | None = None,
-        n_sample: int | None = None,
+        state_shape: Union[Tuple, None] = None,
+        n_sample: Union[int, None] = None,
         is_negative_prompt: bool = False,
         num_steps: int = 35,
         solver_option: COMMON_SOLVER_OPTIONS = "2ab",
         x_sigma_max: Optional[torch.Tensor] = None,
-        sigma_max: float | None = None,
+        sigma_max: Union[float, None] = None,
     ) -> Tensor:
         """Generate samples from a data batch using diffusion sampling.
 
@@ -247,13 +249,13 @@ class DiffusionT2WModel(torch.nn.Module):
             data_batch (Dict): Raw data batch from the training data loader
             guidance (float, optional): Classifier-free guidance weight. Defaults to 1.5.
             seed (int, optional): Random seed for reproducibility. Defaults to 1.
-            state_shape (Tuple | None, optional): Shape of the state tensor. Uses self.state_shape if None. Defaults to None.
-            n_sample (int | None, optional): Number of samples to generate. Defaults to None.
+            state_shape (Union[Tuple, None], optional): Shape of the state tensor. Uses self.state_shape if None. Defaults to None.
+            n_sample (Union[int, None], optional): Number of samples to generate. Defaults to None.
             is_negative_prompt (bool, optional): Whether to use negative prompt for unconditional generation. Defaults to False.
             num_steps (int, optional): Number of diffusion sampling steps. Defaults to 35.
             solver_option (COMMON_SOLVER_OPTIONS, optional): Differential equation solver option. Defaults to "2ab" (multistep solver).
             x_sigma_max (Optional[torch.Tensor], optional): Initial noisy tensor. If None, randomly initialized. Defaults to None.
-            sigma_max (float | None, optional): Maximum noise level. Uses self.sde.sigma_max if None. Defaults to None.
+            sigma_max (Union[float, None], optional): Maximum noise level. Uses self.sde.sigma_max if None. Defaults to None.
 
         Returns:
             Tensor: Generated samples after diffusion sampling

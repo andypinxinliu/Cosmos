@@ -29,9 +29,10 @@ import torch.distributed as dist
 
 from cosmos1.utils import log
 from cosmos1.utils.device import Device
+from typing import Union
 
 
-def init() -> int | None:
+def init() -> Union[int, None]:
     """Initialize distributed training."""
     # Set GPU affinity.
     pynvml.nvmlInit()
