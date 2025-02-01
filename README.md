@@ -6,10 +6,6 @@
 
 [NVIDIA Cosmos](https://www.nvidia.com/cosmos/) is a developer-first world foundation model platform designed to help Physical AI developers build their Physical AI systems better and faster. Cosmos contains
 
-1. pre-trained models, available via [Hugging Face](https://huggingface.co/collections/nvidia/cosmos-6751e884dc10e013a0a0d8e6) under the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/) that allows commercial use of the models for free
-2. training scripts under the [Apache 2 License](https://www.apache.org/licenses/LICENSE-2.0), offered through [NVIDIA Nemo Framework](https://github.com/NVIDIA/NeMo) for post-training the models for various downstream Physical AI applications
-
-Details of the platform is described in the [Cosmos paper](https://research.nvidia.com/publication/2025-01_cosmos-world-foundation-model-platform-physical-ai). Preview access is avaiable at [build.nvidia.com](https://build.nvidia.com).
 
 ## Key Features
 
@@ -20,27 +16,77 @@ Details of the platform is described in the [Cosmos paper](https://research.nvid
 - [Post-training scripts](cosmos1/models/POST_TRAINING.md) via NeMo Framework to post-train the pre-trained world foundation models for various Physical AI setup.
 - Pre-training scripts via NeMo Framework for building your own world foundation model. [[Diffusion](https://github.com/NVIDIA/NeMo/tree/main/nemo/collections/diffusion)] [[Autoregressive](https://github.com/NVIDIA/NeMo/tree/main/nemo/collections/multimodal_autoregressive)] [[Tokenizer](https://github.com/NVIDIA/NeMo/tree/main/nemo/collections/diffusion/vae)].
 
-## Model Family
+## Environment Setup
 
-| Model name | Description | Try it out |
-|------------|----------|----------|
-| [Cosmos-1.0-Diffusion-7B-Text2World](https://huggingface.co/nvidia/Cosmos-1.0-Diffusion-7B-Text2World) | Text to visual world generation  | [Inference](cosmos1/models/diffusion/README.md)   |
-| [Cosmos-1.0-Diffusion-14B-Text2World](https://huggingface.co/nvidia/Cosmos-1.0-Diffusion-14B-Text2World) | Text to visual world generation  | [Inference](cosmos1/models/diffusion/README.md)   |
-| [Cosmos-1.0-Diffusion-7B-Video2World](https://huggingface.co/nvidia/Cosmos-1.0-Diffusion-7B-Video2World) | Video + Text based future visual world generation  | [Inference](cosmos1/models/diffusion/README.md)   |
-| [Cosmos-1.0-Diffusion-14B-Video2World](https://huggingface.co/nvidia/Cosmos-1.0-Diffusion-14B-Video2World) | Video + Text based future visual world generation  | [Inference](cosmos1/models/diffusion/README.md)   |
-| [Cosmos-1.0-Autoregressive-4B](https://huggingface.co/nvidia/Cosmos-1.0-Autoregressive-4B) | Future visual world generation  | [Inference](cosmos1/models/autoregressive/README.md)   |
-| [Cosmos-1.0-Autoregressive-12B](https://huggingface.co/nvidia/Cosmos-1.0-Autoregressive-12B) | Future visual world generation  | [Inference](cosmos1/models/autoregressive/README.md)   |
-| [Cosmos-1.0-Autoregressive-5B-Video2World](https://huggingface.co/nvidia/Cosmos-1.0-Autoregressive-5B-Video2World) | Video + Text based future visual world generation | [Inference](cosmos1/models/autoregressive/README.md)   |
-| [Cosmos-1.0-Autoregressive-13B-Video2World](https://huggingface.co/nvidia/Cosmos-1.0-Autoregressive-13B-Video2World) | Video + Text based future visual world generation | [Inference](cosmos1/models/autoregressive/README.md)   |
-| [Cosmos-1.0-Guardrail](https://huggingface.co/nvidia/Cosmos-1.0-Guardrail) | Guardrail contains pre-Guard and post-Guard for safe use | Embedded in model inference scripts |
+There could be problems with transformer engine, not sure if it now works
+```bash
+conda create -n cosmos python=3.10 # must be greater or equal to 3.10
+conda install -c conda-forge cxx-compiler
+conda install gcc=9 # must be greater or equal to 9
+conda install pytorch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 pytorch-cuda=12.1 -c pytorch -c nvidia
+conda install nvidia/label/cuda-12.1.1::cuda-toolkit
+conda install nvidia/label/cuda-12.1.1::cuda-nvcc
+conda install anaconda::cudnn
+pip install transformer_engine[pytorch]
+pip install -r requirements.txt
 
-## Example Usage
+```
+
+
+## Download Checkpoints
+
+1. Generate a [Hugging Face](https://huggingface.co/settings/tokens) access token. Set the access token to 'Read' permission (default is 'Fine-grained').
+
+2. Log in to Hugging Face with the access token:
+
+```bash
+huggingface-cli login
+```
+
+3. Request access to Mistral AI's Pixtral-12B model by clicking on `Agree and access repository` on [Pixtral's Hugging Face model page](https://huggingface.co/mistralai/Pixtral-12B-2409). This step is required to use Pixtral 12B for the Video2World prompt upsampling task.
+
+4. Download the Cosmos model weights from [Hugging Face](https://huggingface.co/collections/nvidia/cosmos-6751e884dc10e013a0a0d8e6):
+
+```bash
+python cosmos1/scripts/download_diffusion.py --model_sizes 7B 14B --model_types Text2World Video2World
+```
+
+5. The downloaded files should be in the following structure:
+
+```
+checkpoints/
+├── Cosmos-1.0-Diffusion-7B-Text2World
+│   ├── model.pt
+│   └── config.json
+├── Cosmos-1.0-Diffusion-14B-Text2World
+│   ├── model.pt
+│   └── config.json
+├── Cosmos-1.0-Diffusion-7B-Video2World
+│   ├── model.pt
+│   └── config.json
+├── Cosmos-1.0-Diffusion-14B-Video2World
+│   ├── model.pt
+│   └── config.json
+├── Cosmos-1.0-Tokenizer-CV8x8x8
+│   ├── decoder.jit
+│   ├── encoder.jit
+│   └── mean_std.pt
+├── Cosmos-1.0-Prompt-Upsampler-12B-Text2World
+│   ├── model.pt
+│   └── config.json
+├── Pixtral-12B
+│   ├── model.pt
+│   ├── config.json
+└── Cosmos-1.0-Guardrail
+    ├── aegis/
+    ├── blocklist/
+    ├── face_blur_filter/
+    └── video_content_safety_filter/
+```
+
 
 ### Inference
 
-Follow the [Cosmos Installation Guide](INSTALL.md) to setup the docker. For inference with the pretrained models, please refer to [Cosmos Diffusion Inference](cosmos1/models/diffusion/README.md) and [Cosmos Autoregressive Inference](cosmos1/models/autoregressive/README.md).
-
-The code snippet below provides a gist of the inference usage.
 
 ```bash
 PROMPT="A sleek, humanoid robot stands in a vast warehouse filled with neatly stacked cardboard boxes on industrial shelves. \
